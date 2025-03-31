@@ -1,6 +1,7 @@
 package org.exp.entities;
 
 import com.pengrad.telegrambot.model.Update;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
@@ -15,20 +16,31 @@ import java.util.concurrent.atomic.AtomicReference;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
+@Entity(name = "users")
 public class User {
     @Id
+    @Column(name = "user_id")
     private Long userId;
+
+    @Column(name = "full_name")
     private String fullName;
+
+    @Column(name = "username")
     private String username;
+
+    @Column(name = "phone")
     private String phone;
+
+    @Column(name = "language")
     private String language;
-    private String languageCode;
 
+    @Column(name = "last_message_id")
     private Integer lastMessageId;
-    private Boolean isActive;
-    private Boolean hasProvidedPhone;
 
+    @Column(name = "is_active")
+    private Boolean isActive;
+
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
 
@@ -63,53 +75,4 @@ public class User {
         }
         return fullNameBuilder.toString();
     }
-
-    /*
-     * Ism, familiya va telegram nomini birlashtirib, fullDisplayName ni o'rnatadi.
-     *
-     * @param firstName    Foydalanuvchi ismi
-     * @param lastName     Foydalanuvchi familiyasi
-     * @param telegramName Foydalanuvchi telegram nomi
-     */
-
-    /*public void setFullDisplayName(Update update) {
-        StringBuilder fullNameBuilder = new StringBuilder();
-        String firstName;
-        String lastName;
-        String telegramName;
-
-        if (update.message()!=null) {
-            firstName = update.message().chat().firstName();
-            lastName = update.message().chat().lastName();
-            telegramName = update.message().chat().username();
-
-        } else {
-            firstName = update.callbackQuery().from().firstName();
-            lastName = update.callbackQuery().from().lastName();
-            telegramName = update.callbackQuery().from().username();
-        }
-
-        // Ism va familiyani qo'shish
-        if (firstName != null) {
-            fullNameBuilder.append(firstName);
-        }
-        if (lastName != null) {
-            if (!fullNameBuilder.isEmpty()) {
-                fullNameBuilder.append(" ");
-            }
-            fullNameBuilder.append(lastName);
-        }
-
-        // Telegram nomini qo'shish (agar mavjud bo'lsa)
-        if (telegramName != null) {
-            if (!fullNameBuilder.isEmpty()) {
-                fullNameBuilder.append(" (@").append(telegramName).append(")");
-            } else {
-                fullNameBuilder.append("@").append(telegramName);
-            }
-        }
-
-        // fullDisplayName ni o'zgartirish
-        this.fullDisplayName = fullNameBuilder.toString();
-    }*/
 }

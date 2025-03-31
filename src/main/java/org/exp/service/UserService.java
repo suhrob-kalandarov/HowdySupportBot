@@ -1,25 +1,32 @@
 package org.exp.service;
 
+import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
-import com.pengrad.telegrambot.request.SendMessage;
 import org.exp.entities.User;
 import org.exp.messages.MessageManager;
+import org.exp.repos.UserRepository;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.Main.ADMIN_ID;
-import static org.Main.bot;
 import static org.exp.messages.MessageManager.installResourceBundle;
 
-public interface UserService {
-    List<User> USERS_LIST = new ArrayList<>();
+public class UserService {
+    private static final UserRepository userRepository = UserRepository.getInstance();
 
-    static User getOrCreateUser(Update update, long userId) {
-        Optional<User> optionalUser = USERS_LIST.stream()
-                .filter(user -> user.getUserId().equals(userId))
-                .findFirst();
+    public static User getOrCreateUser(Update update) {
+        Long userId;
+        Message message = update.message();
+
+        if (message != null) {
+            userId = message.from().id();
+        } else {
+            userId = update.callbackQuery().from().id();
+        }
+
+        // var
+        Optional<User> optionalUser = (Optional<User>) userRepository.findById(userId);
 
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
@@ -27,91 +34,22 @@ public interface UserService {
                 installResourceBundle(user);
             }
             return user;
-
         } else {
-            User user = new User();
-            user.setUserId(userId);
-            user.setUsername(update.message().chat().username());
-            user.setFullName(update);
-            user.setIsActive(true);
-            user.setHasProvidedPhone(false);
-            user.setLanguage("en");
-            USERS_LIST.add(user);
+            User newUser = new User(update);
+            newUser.setIsActive(true);
+            newUser.setLanguage("en"); // Default til
+            newUser.setCreatedAt(LocalDateTime.now());
+
+            userRepository.save(newUser); // Bazaga saqlaymiz
+
             if (MessageManager.bundle == null) {
-                installResourceBundle(user);
+                installResourceBundle(newUser);
             }
-            return user;
+            return newUser;
         }
     }
 
-    static void sendMessageToUser(User user) {
-        StringBuilder message = new StringBuilder();
-
-        message.append("ID:").append(user.getUserId());
-        message.append("\nName: ").append(user.getFullName());
-        message.append("\nUsername: @").append(user.getUsername());
-        message.append("\nPhone: ").append(user.getPhone());
-        message.append("\nLanguage: ").append(user.getLanguage());
-        message.append("\nActive: ").append(user.getIsActive());
-
-        if (!user.getUserId().equals(ADMIN_ID)){
-            user.setLastMessageId(bot.execute(new SendMessage(
-                    ADMIN_ID,
-                    "New user joined to support bot!\n\n" + message
-            )).message().messageId());
-        }
+    public static boolean isAdmin(Long userId) {
+        return userId.equals(ADMIN_ID);
     }
-
-    /*static void sendMessageToUserChangeLang(User user) {
-        StringBuilder message = new StringBuilder();
-
-        message.append("ID:").append(user.getUserId());
-        message.append("\nDisplay: ").append(user.getFullDisplayName());
-        message.append("\nPhone: ").append(user.getPhoneNumber());
-        message.append("\nLanguage: ").append(user.getLanguage()).append("(changed)");
-        message.append("\nActive: ").append(user.getIsActive());
-
-        if (!user.getUserId().equals(ADMIN_ID)){
-            bot.execute(new EditMessageText(
-                    ADMIN_ID, user.getMessageId(),
-                    "New user joined to support bot!\n\n" + message
-            ));
-        }
-    }*/
-
-
-/*    static User getOrCreateUser(Update update) {
-        User user = null;
-
-        if (update.callbackQuery() != null) {
-            //user = getUserFromDatabase(update.callbackQuery().from().id());
-
-            if (user!=null){
-               user.setFullName(getUserFullName(update));
-               user.setUsername(update.callbackQuery().from().username());
-                //Objects.requireNonNull(user).setGameBoard(getGameBoard(user.getUserId()));
-            }
-            return user;
-        }
-
-        Long userId = update.message().from().id();
-        String username = update.message().from().username();
-
-        //user = getUserFromDatabase(userId);
-
-        user = User.builder()
-                .userId(userId)
-                .fullName(getUserFullName(update))
-                .username(update.message().chat().username())
-                .messageId(null)
-                //.userState(UserState.START)
-                //.language("en")
-                .build();
-        *//*insertUserIntoDatabase(user);
-        insertDefaultGameStatus(userId);
-        user.setGameBoard(getGameBoard(user.getUserId()));
-        insertGames(userId);*//*
-
-        return user;
-    }*/
 }
