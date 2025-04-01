@@ -3,11 +3,9 @@ package org.exp.cmds.hands;
 import com.pengrad.telegrambot.model.CallbackQuery;
 import com.pengrad.telegrambot.model.Update;
 import lombok.RequiredArgsConstructor;
-import org.exp.cmds.cmds.LanguageChangerCmd;
-import org.exp.cmds.cmds.WarningMenuCmd;
+import org.exp.cmds.cmds.*;
 import org.exp.entities.User;
-import org.exp.faces.Command;
-import org.exp.faces.Handle;
+import org.exp.faces.*;
 import org.exp.repos.UserRepository;
 
 import java.util.Objects;
@@ -29,7 +27,10 @@ public class CallbackQueryCmd implements Handle {
         String data = callbackQuery.data();
 
         if (data.startsWith(LANG)) {
-            command = new LanguageChangerCmd(update, user, userRepository);
+            command = new LanguageChangerCmd(user, callbackQuery);
+
+        } else if (data.startsWith("block_") || data.startsWith("unblock_")) {
+            command = new BlockCmd(user, data);
 
         } else {
             command = new WarningMenuCmd(update, user);

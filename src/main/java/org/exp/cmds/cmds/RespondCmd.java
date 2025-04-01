@@ -1,27 +1,27 @@
 package org.exp.cmds.cmds;
 
-import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.model.Message;
-import com.pengrad.telegrambot.model.Update;
 import lombok.RequiredArgsConstructor;
-
-import org.exp.entities.User;
 import org.exp.faces.Command;
-
-import static org.Main.bot;
+import org.exp.repos.ForwardedMessageRepository;
 
 @RequiredArgsConstructor
 public class RespondCmd implements Command {
-    private final Update update;
-    private final Long userId;
+    private final Message message;
+    private final ForwardedMessageRepository forwardRepo;
 
     @Override
     public void process() {
-        Message message = update.message();
-        SendMessage replyToUser = new SendMessage(
-                userId,
-                "📩You have respond:\uD83D\uDC47\n\n" + message.text()
-        );
-        bot.execute(replyToUser);
+        Command command = null;
+        Integer repliedMessageId = message.replyToMessage().messageId();
+        Long userId = (Long) forwardRepo.findById(repliedMessageId);
+
+        if (userId != null) {
+            command = new SendRespondCmd(message, userId);
+        } else {
+            command = new NotFoundCmd(message.from().id());
+        }
+
+        command.process();
     }
 }

@@ -40,6 +40,10 @@ public class User {
     @Column(name = "is_active")
     private Boolean isActive;
 
+    @Column(name = "is_blocked")
+    @Builder.Default
+    private Boolean isBlocked = true;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 

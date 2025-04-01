@@ -8,8 +8,8 @@ import org.exp.entities.User;
 import org.exp.faces.Command;
 import org.exp.messages.Constants;
 
-import static org.Main.ADMIN_ID;
 import static org.Main.bot;
+import static org.exp.messages.Constants.ADMIN_ID;
 
 @RequiredArgsConstructor
 public class WarningMenuCmd implements Command {

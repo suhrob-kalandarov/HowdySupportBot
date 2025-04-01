@@ -2,12 +2,10 @@ package org.exp.cmds.cmds;
 
 import com.pengrad.telegrambot.request.SendMessage;
 import lombok.RequiredArgsConstructor;
-
 import org.exp.entities.User;
 import org.exp.faces.Command;
-import org.exp.service.ButtonService;
 import org.exp.service.UserService;
-
+import org.exp.service.ButtonService;
 import static org.Main.bot;
 import static org.exp.messages.Constants.MAIN_MENU_MSG;
 import static org.exp.messages.MessageManager.getMessage;
@@ -27,8 +25,8 @@ public class CabinetCmd implements Command {
                 getMessage(MAIN_MENU_MSG)
         );
 
-        message.replyMarkup(ButtonService.sharePhone(user)); // Tugmani qo'shish
+        message.replyMarkup(ButtonService.sharePhone(user));
 
-        bot.execute(message); // Xabarni yuborish
+        bot.execute(message);
     }
 }

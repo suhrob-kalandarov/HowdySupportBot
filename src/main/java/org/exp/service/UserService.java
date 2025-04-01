@@ -9,7 +9,7 @@ import org.exp.repos.UserRepository;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static org.Main.ADMIN_ID;
+import static org.exp.messages.Constants.ADMIN_ID;
 import static org.exp.messages.MessageManager.installResourceBundle;
 
 public class UserService {

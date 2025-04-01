@@ -40,11 +40,12 @@ public class MessageCmd implements Handle {
                 installResourceBundle(user);
             }
 
-            if (isAdmin && message.replyToMessage() != null) {
-                Integer repliedMessageId = message.replyToMessage().messageId();
-                Long userId = (Long) forwardedMessageRepository.findById(repliedMessageId);
+            if (user.getLastMessageId()!= null) {
+                new DeleteOldMessage(user).process();
+            }
 
-                command = (userId != null) ? new RespondCmd(update, userId) : new NotFoundCmd(update, user);
+            if (isAdmin && message.replyToMessage() != null) {
+                command = new RespondCmd(message, forwardedMessageRepository);
 
             } else if (contact != null) {
                 command = new ContactCmd(user, contact, userRepository);
@@ -58,13 +59,12 @@ public class MessageCmd implements Handle {
             } else if (SLASH_INFO.equals(text)) {
                 command = new InfoMenuCmd(update, user);
 
-            } else if (!isAdmin) {
+            } else if (!isAdmin && userRepository.isUserBlocked(user.getUserId())) {
                 command = new ForwardMessageCmd(update, user, forwardedMessageRepository);
 
             } else {
                 command = new WarningMenuCmd(update, user);
             }
-
             command.process();
 
         } catch (Exception e) {

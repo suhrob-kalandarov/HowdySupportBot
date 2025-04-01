@@ -1,8 +1,8 @@
 package org.exp.cmds.cmds;
 
-import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.EditMessageText;
 import com.pengrad.telegrambot.response.SendResponse;
+import com.pengrad.telegrambot.model.CallbackQuery;
 import lombok.RequiredArgsConstructor;
 import org.exp.entities.User;
 import org.exp.faces.Command;
@@ -17,13 +17,13 @@ import static org.exp.messages.MessageManager.setLocale;
 
 @RequiredArgsConstructor
 public class LanguageChangerCmd implements Command {
-    private final Update update;
     private final User user;
-    private final UserRepository userRepository;
+    private final CallbackQuery callbackQuery;
 
     @Override
     public void process() {
-        String languageCode = update.callbackQuery().data().split("_")[1];
+        UserRepository userRepository = UserRepository.getInstance();
+        String languageCode = callbackQuery.data().split("_")[1];
 
         System.out.println("Til o'zgartirilmoqda: {" + languageCode +"}");
 

@@ -79,4 +79,60 @@ public class UserRepository implements UseKeys {
             e.printStackTrace();
         }
     }
+
+    public boolean isUserActive(Long userId) {
+        try {
+            User user = entityManager.find(User.class, userId);
+            return user != null && user.getIsActive();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public void updateUserActive(Long userId, boolean isActive) {
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            User user = entityManager.find(User.class, userId);
+            if (user != null) {
+                user.setIsActive(isActive);
+                entityManager.merge(user);
+            }
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+    }
+
+    public void setUserBlocked(Long userId, Boolean isBlocked) {
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            User user = entityManager.find(User.class, userId);
+            if (user != null) {
+                user.setIsBlocked(isBlocked);
+                entityManager.merge(user);
+            }
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+    }
+
+    public Boolean isUserBlocked(Long userId) {
+        try {
+            User user = entityManager.find(User.class, userId);
+            return (user != null) ? user.getIsBlocked() : null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
