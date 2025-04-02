@@ -10,8 +10,8 @@ import static org.exp.messages.Constants.USER_NOT_FOUND_MSG;
 import static org.exp.messages.MessageManager.getMessage;
 
 @RequiredArgsConstructor
-public class NotFoundCmd implements Command {
-    private final Long userId;
+public class NotFoundUserCmd implements Command {
+    private final String userId;
 
     @Override
     public void process() {

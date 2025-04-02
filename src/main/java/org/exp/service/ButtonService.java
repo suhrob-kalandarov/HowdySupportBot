@@ -28,7 +28,7 @@ public interface ButtonService {
 
     static InlineKeyboardMarkup infoMenuButtons() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup(
-                new InlineKeyboardButton(PLATFORM_CHANNEL).url(PLATFORM_CHANNEL_LINK),
+                new InlineKeyboardButton(PLATFORM_TG_CHANNEL).url(PLATFORM_CHANNEL_LINK),
                 new InlineKeyboardButton(BOTS_CHANNEL).url(BOTS_CHANNEL_LINK)
         );
 
@@ -37,16 +37,5 @@ public interface ButtonService {
         );
 
         return inlineKeyboardMarkup;
-    }
-
-    static Keyboard blockUserBtn(User user) {
-        if (!user.getIsBlocked()){
-            return new InlineKeyboardMarkup(
-                    new InlineKeyboardButton("BLOCK").callbackData("block_" + user.getUserId())
-            );
-        }
-        return new InlineKeyboardMarkup(
-                new InlineKeyboardButton("UNBLOCK").callbackData("unblock_" + user.getUserId())
-        );
     }
 }

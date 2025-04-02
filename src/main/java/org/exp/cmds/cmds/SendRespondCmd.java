@@ -25,14 +25,14 @@ public class SendRespondCmd implements Command {
 
         if (response.isOk()) {
             bot.execute(new SendMessage(ADMIN_ID,
-                    SUCCESS_SENT_MSG + " (" + userId +")")
+                    getMessage(SUCCESS_SENT_MSG).formatted(userId))
             );
             if (!userRepo.isUserActive(userId)){
                 userRepo.updateUserActive(userId, true);
             }
         } else {
             bot.execute(new SendMessage(ADMIN_ID,
-                    getMessage(NOT_SENT_MSG) + " (" + userId +")")
+                    getMessage(NOT_SENT_MSG).formatted(userId))
             );
             userRepo.updateUserActive(userId, false);
         }

@@ -25,9 +25,14 @@ public class UpdateService {
             User user = UserService.getOrCreateUser(update);
 
             if (message != null) {
-                handle = new MessageCmd(update, user, userRepository, forwardedMessageRepository);
+                handle = new MessageCmd(update, user, userRepository);
 
             } else if (callbackQuery != null) {
+
+                /*if (user.getLastMessageId()!= null) {
+                    new DeleteOldMessage(user).process();
+                }*/
+
                 handle = new CallbackQueryCmd(update, user, userRepository);
             }
 

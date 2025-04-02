@@ -5,11 +5,11 @@ import jakarta.persistence.EntityTransaction;
 
 import org.exp.entities.User;
 import org.exp.config.DB;
-import org.exp.usekeys.UseKeys;
+import org.exp.usekeys.RepoKeys;
 
 import java.util.Optional;
 
-public class UserRepository implements UseKeys {
+public class UserRepository implements RepoKeys {
     private static UserRepository instance;
     private final EntityManager entityManager;
 
@@ -114,7 +114,6 @@ public class UserRepository implements UseKeys {
             transaction.begin();
             User user = entityManager.find(User.class, userId);
             if (user != null) {
-                user.setIsBlocked(isBlocked);
                 entityManager.merge(user);
             }
             transaction.commit();
@@ -126,10 +125,46 @@ public class UserRepository implements UseKeys {
         }
     }
 
-    public Boolean isUserBlocked(Long userId) {
+    public void setTimerMessageId(Long userId, Integer timerMessageId) {
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            User user = entityManager.find(User.class, userId);
+            if (user != null) {
+                user.setTimerMessageId(timerMessageId);
+                entityManager.merge(user);
+            }
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+    }
+
+    public void updateLastMessageId(Long userId, Integer lastMessageId) {
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            User user = entityManager.find(User.class, userId);
+            if (user != null) {
+                user.setTimerMessageId(lastMessageId);
+                entityManager.merge(user);
+            }
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+    }
+
+    public Integer getLastMessageId(Long userId) {
         try {
             User user = entityManager.find(User.class, userId);
-            return (user != null) ? user.getIsBlocked() : null;
+            return (user != null) ? user.getTimerMessageId() : null;
         } catch (Exception e) {
             e.printStackTrace();
             return null;

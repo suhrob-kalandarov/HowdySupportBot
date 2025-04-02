@@ -8,18 +8,18 @@ import org.exp.repos.ForwardedMessageRepository;
 @RequiredArgsConstructor
 public class RespondCmd implements Command {
     private final Message message;
-    private final ForwardedMessageRepository forwardRepo;
 
     @Override
     public void process() {
         Command command = null;
+        ForwardedMessageRepository forwardRepo = ForwardedMessageRepository.getInstance();
         Integer repliedMessageId = message.replyToMessage().messageId();
         Long userId = (Long) forwardRepo.findById(repliedMessageId);
 
         if (userId != null) {
             command = new SendRespondCmd(message, userId);
         } else {
-            command = new NotFoundCmd(message.from().id());
+            command = new NotFoundUserCmd(message.from().id() + " | " + userId);
         }
 
         command.process();

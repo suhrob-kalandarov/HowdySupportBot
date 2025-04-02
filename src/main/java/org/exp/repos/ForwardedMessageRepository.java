@@ -4,11 +4,11 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import org.exp.config.DB;
 import org.exp.entities.ForwardedMessage;
-import org.exp.usekeys.UseKeys;
+import org.exp.usekeys.RepoKeys;
 
 import java.util.List;
 
-public class ForwardedMessageRepository implements UseKeys {
+public class ForwardedMessageRepository implements RepoKeys {
     private static ForwardedMessageRepository instance;
     private final EntityManager entityManager;
 

@@ -37,15 +37,15 @@ public class User {
     @Column(name = "last_message_id")
     private Integer lastMessageId;
 
+    @Column(name = "timer_message_id")
+    private Integer timerMessageId;
+
     @Column(name = "is_active")
     private Boolean isActive;
 
-    @Column(name = "is_blocked")
-    @Builder.Default
-    private Boolean isBlocked = true;
-
     @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    @Builder.Default
+    private LocalDateTime createdAt = LocalDateTime.now();
 
 
     public User(Update update){
@@ -67,7 +67,7 @@ public class User {
             lastName = update.callbackQuery().from().lastName();
         }
 
-        // Ism va familiyani qo'shish
+        /// Adding firstName and lastName
         if (firstName != null) {
             fullNameBuilder.get().append(firstName);
         }

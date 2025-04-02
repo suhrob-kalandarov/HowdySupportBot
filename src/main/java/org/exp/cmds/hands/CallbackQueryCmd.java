@@ -30,7 +30,7 @@ public class CallbackQueryCmd implements Handle {
             command = new LanguageChangerCmd(user, callbackQuery);
 
         } else if (data.startsWith("block_") || data.startsWith("unblock_")) {
-            command = new BlockCmd(user, data);
+            //command = new BlockCmd(user, data);
 
         } else {
             command = new WarningMenuCmd(update, user);

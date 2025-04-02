@@ -4,6 +4,7 @@ import com.pengrad.telegrambot.request.SendMessage;
 import lombok.RequiredArgsConstructor;
 import org.exp.entities.User;
 import org.exp.faces.Command;
+import org.exp.repos.UserRepository;
 import org.exp.service.UserService;
 import org.exp.service.ButtonService;
 import static org.Main.bot;
@@ -16,17 +17,17 @@ public class CabinetCmd implements Command {
 
     @Override
     public void process() {
-        if (UserService.isAdmin(user.getUserId())) {
-            bot.execute(new SendMessage(user.getUserId(), "You're Admin!"));
+        UserRepository userRepo = UserRepository.getInstance();
+
+        if (user.getLastMessageId() != null){
+            new DeleteOldMessage(user).process();
         }
 
-        SendMessage message = new SendMessage(
-                user.getUserId(),
-                getMessage(MAIN_MENU_MSG)
-        );
-
-        message.replyMarkup(ButtonService.sharePhone(user));
-
-        bot.execute(message);
+        user.setLastMessageId(bot.execute(
+                new SendMessage(user.getUserId(),
+                        getMessage(MAIN_MENU_MSG)
+                ).replyMarkup(ButtonService.sharePhone(user))
+        ).message().messageId());
+        userRepo.updateLastMessageId(user.getUserId(), user.getLastMessageId());
     }
 }

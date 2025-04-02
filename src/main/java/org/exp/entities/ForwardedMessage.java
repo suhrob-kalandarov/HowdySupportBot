@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class ForwardedMessage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Avtomatik ID
+    private Long id;
 
     @Column(name = "message_id")
     private Integer messageId; // Forward qilingan xabar ID

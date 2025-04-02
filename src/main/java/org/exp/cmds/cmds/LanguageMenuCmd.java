@@ -13,11 +13,15 @@ import static org.exp.messages.MessageManager.getMessage;
 
 @RequiredArgsConstructor
 public class LanguageMenuCmd implements Command {
-    private final Update update;
     private final User user;
 
     @Override
     public void process() {
+
+        if (user.getLastMessageId()!= null){
+            new DeleteOldMessage(user).process();
+        }
+
         user.setLastMessageId(
                 bot.execute(new SendMessage(
                                 user.getUserId(), getMessage(LANG_CHANGE_MENU_MSG)
