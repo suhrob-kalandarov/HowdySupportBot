@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.exp.entities.User;
 import org.exp.faces.Command;
 import org.exp.repos.UserRepository;
-import org.exp.service.UserService;
 import org.exp.service.ButtonService;
 import static org.Main.bot;
 import static org.exp.messages.Constants.MAIN_MENU_MSG;
